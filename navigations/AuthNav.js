@@ -4,19 +4,27 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Splachscreen from '../screens/Splachscreen'
 import LoginScreen from '../screens/LoginScreen';
+import MainNav from './MainNav';
 
 const Stack = createStackNavigator();
 
 const AuthNav = () => {
+
+  let auth = false;
   return (
     <Stack.Navigator
-        screenOptions={{
-            headerShown: false
-        }}
+      screenOptions={{
+        headerShown: false
+      }}
     >
-        <Stack.Screen name='splach' component={Splachscreen} />
-        <Stack.Screen name='login' component={LoginScreen} />
-
+      {auth ?(
+        <Stack.Screen name='Main' component={MainNav} />
+      ):
+        <>
+          <Stack.Screen name='splach' component={Splachscreen} />
+          <Stack.Screen name='login' component={LoginScreen} />
+        </>
+      }
     </Stack.Navigator>
   )
 }

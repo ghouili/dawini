@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, Dimensions, TouchableOpacity, Image, TextInput, ScrollView  } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import * as Animatable from 'react-native-animatable';
@@ -7,6 +7,36 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const LoginScreen = ({ navigation }) => {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [secure, setSecure] = useState(false);
+
+    const submit = async () => {
+        let result = await fetch(`${path}/user/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: username,
+                password: password,
+            })
+        });
+
+        //convertin responce to json
+        let resultData = await result.json();
+        //checking if there is data
+        if (resultData) {
+    
+            console.log(resultData);
+        } else {
+            console.log("erro");
+            
+        }
+
+    }
+
   return (
     <ScrollView style={{}}>
         <View style={{height: windowHeight * 0.5, alignItems: 'center', justifyContent: 'center', paddingTop: "10%"}}>
@@ -23,9 +53,9 @@ const LoginScreen = ({ navigation }) => {
             <View style={{marginLeft: windowWidth * 0.05, marginBottom: "4%"}}>
                 <Text style={{fontSize: 20, fontWeight: '300', marginBottom: "3%", color: "#fff"}}>Username : </Text>
                 <TextInput
-                    style={{width: windowWidth * 0.7,borderWidth: 1, paddingLeft: "3%", borderRadius: 10, fontSize: 16, marginLeft: windowWidth * 0.05, paddingVertical: "1%", borderColor: "#fff"}}
+                    style={{width: windowWidth * 0.7,borderWidth: 1, paddingLeft: "3%", borderRadius: 10, fontSize: 16, marginLeft: windowWidth * 0.05, paddingVertical: "1%", borderColor: "#fff", color: "#fff"}}
                     placeholderTextColor="#fff"
-                    // onChangeText={onChangeNumber}
+                    onChangeText={(text)=> setUsername(text)}
                     placeholder="Username"
                     keyboardType="default"
                 />
@@ -34,17 +64,18 @@ const LoginScreen = ({ navigation }) => {
             <View style={{marginLeft: windowWidth * 0.05, marginBottom: "10%"}}>
                 <Text style={{fontSize: 20, fontWeight: '300', marginBottom: "3%", color: "#fff"}}>Password : </Text>
                 <TextInput
-                    style={{width: windowWidth * 0.7,borderWidth: 1, paddingLeft: "3%", borderRadius: 10, fontSize: 16, marginLeft: windowWidth * 0.05, paddingVertical: "1%", borderColor: "#fff"}}
+                    style={{width: windowWidth * 0.7,borderWidth: 1, paddingLeft: "3%", borderRadius: 10, fontSize: 16, marginLeft: windowWidth * 0.05, paddingVertical: "1%", borderColor: "#fff", color: "#fff"}}
                     placeholderTextColor="#fff"
-                    // onChangeText={onChangeNumber}
+                    onChangeText={(val) => setPassword(val)}
                     placeholder="password"
+                    secureTextEntry={secure}
                     keyboardType="default"
                 />
             </View>
             
             <TouchableOpacity
                 style={{backgroundColor: '#63CCFF', width: windowWidth * 0.6, borderRadius: 5, paddingVertical: "2%", alignItems: 'center', alignSelf: 'center'}}
-                onPress={()=> navigation.navigate('splach')}
+                onPress={submit}
             >
                 <View style={{flexDirection: 'row'}}>
                     <Text style={{fontSize: 18, fontWeight: '300', color: "#fff"}}>Log In</Text>
@@ -52,6 +83,7 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
             <View style={{ flexDirection: "row", alignSelf: 'center', marginTop: "2%"}}>
                 <Text style={{color: "#fff"}}>If you don't have an account </Text><TouchableOpacity
+                 onPress={() => navigation.navigate('splach')}
                 ><Text style={{ color: "#63CCFF"}}>Sign Up</Text></TouchableOpacity>
             </View>
         </Animatable.View>
